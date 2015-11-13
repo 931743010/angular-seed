@@ -1,61 +1,34 @@
-angular.module('app').config(['$provide', '$stateProvider', '$urlRouterProvider', function ($provide, $stateProvider, $urlRouterProvider) {
+angular.module('app').config(['$provide', '$stateProvider', '$urlRouterProvider', function($provide, $stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
 
     $stateProvider.state('app', {
         abstract: true,
         templateUrl: 'app/index.html',
         resolve: {
-            //$navService:['$ocLazyLoad', function($ocLazyLoad){
-            //    return $ocLazyLoad.load('app/nav/nav.service.js');
-            //
-            //}],
-            //$userService: ['$ocLazyLoad', function($ocLazyLoad){
-            //    return $ocLazyLoad.load('app/user/user.service.js');
-            //}],
-            //nav: ['$navService', 'navService', function($navService, navService){
-            //    return navService.getNav();
-            //}],
-            //currentUser:['$userService', 'userService', function($userService, userService){
-            //    return userService.getCurrentUser();
-            //}]
-            loadCss:['$ocLazyLoad', 'AppConfig', function ($ocLazyLoad, AppConfig) {                
-                return $ocLazyLoad.load([
-                    'assets/theme/' + AppConfig.theme + '/css/bootstrap.min.css',
-                    'assets/theme/' + AppConfig.theme + '/css/style.min.css'
-                ]);
-            }],
             //enum
-            status: ['$ocLazyLoad', '$injector', function ($ocLazyLoad, $injector) {
-                return $ocLazyLoad.load(['app/shared/status/status.service.js']).then(function () {
-                    return $injector.get('statusService').get().then(function(data){
+            status: ['$ocLazyLoad', '$injector', function($ocLazyLoad, $injector) {
+                return $ocLazyLoad.load(['app/shared/status/status.service.js']).then(function() {
+                    return $injector.get('statusService').get().then(function(data) {
                         return $provide.constant('Status', data);
                     });
                 });
             }],
-            nav: ['$ocLazyLoad', '$injector', function($ocLazyLoad, $injector){
-                return $ocLazyLoad.load('app/nav/nav.service.js').then(function(){
-                   return $injector.get('navService').getNav();
-                });
-
-            }],
-            currentUser:['$ocLazyLoad', '$injector', function($ocLazyLoad, $injector){
-                return $ocLazyLoad.load('app/user/user.service.js').then(function(){
-                    return $injector.get('userService').getCurrentUser();
+            //面包 - 屑
+            bread: ['$ocLazyLoad', '$injector', function($ocLazyLoad, $injector) {
+                return $ocLazyLoad.load(['app/bread/bread.service.js']).then(function() {
+                    return $injector.get('breadService').get().then(function (response) {
+                        return response.data;
+                    });
                 });
             }],
-            load: ['$ocLazyLoad', 'AppConfig', function ($ocLazyLoad, AppConfig) {                
-                return $ocLazyLoad.load([
-                    'app/components/menu/menu.directive.js'                    
-                ]);
-            }]
         },
-        controller: ['$rootScope', '$scope', '$state', 'nav', 'currentUser', function ($rootScope, $scope, $state, nav, currentUser) {
+        controllerAs: 'vm',
+        controller: ['$rootScope', '$scope', '$state', 'bread', function($rootScope, $scope, $state, bread) {
 
-            $scope.nav = nav;
+            var vm = this;
+            vm.breadcrumb = [];
 
-            $rootScope.currentUser = currentUser;            
-
-            var navs = {};
+            var crumb = {};
             (function flatten(a, dest) {
                 var i = 0,
                     j = a.length;
@@ -65,25 +38,25 @@ angular.module('app').config(['$provide', '$stateProvider', '$urlRouterProvider'
                         arguments.callee(a[i].children, dest);
                     }
                 }
-            })(nav, navs);
+            })(bread, crumb);
 
 
-            $scope.$on('$stateChangeSuccess', function () {
-                $rootScope.breadcrumb = [];
+            $scope.$on('$stateChangeSuccess', function() {
+
+                vm.breadcrumb = [];
                 var current = $state.$current.name,
                     states = current.split('.'),
                     i = 2,
                     j = states.length;
                 for (; i <= j; i++) {
                     var stateItem = states.slice(0, i).join('.');
-                    if (navs[stateItem]) {
-
-                        $rootScope.title = $scope.title = navs[stateItem].title;
-                        $rootScope.breadcrumb.push(navs[stateItem]);
+                    if (crumb[stateItem]) {
+                        $rootScope.title = crumb[stateItem].title;
+                        vm.breadcrumb.push(crumb[stateItem]);
                     }
                 }
                 if (current.indexOf('app.home') !== 0) {
-                    $rootScope.breadcrumb.unshift(navs['app.home']);
+                    vm.breadcrumb.unshift(crumb['app.home']);
                 }
             });
         }]

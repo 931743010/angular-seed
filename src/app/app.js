@@ -9,8 +9,7 @@ angular.module('app.nav', []);
 
 angular.module('app.home', []);
 
-angular.module('app.user', ['app.user.cu']);
-angular.module('app.user.cu', []);
+angular.module('app.user', []);
 
 angular.module('app.role', []);
 
@@ -76,11 +75,6 @@ angular.module('app', [
         stConfig.pagination.itemsByPage = 10;
         //stConfig.pagination.displayedPages = 5;
     }])
-    .constant('Status', {
-        Enabled: 1,
-        Disabled: 2,
-        Deleted: -1
-    })
     .constant('AppConfig', {
         theme: 'default',
         serverBaseUrl: 'http://localhost:63342/'

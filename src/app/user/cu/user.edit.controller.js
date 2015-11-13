@@ -1,5 +1,5 @@
 
-angular.module('app.user.cu').controller('UserEditController', ['$scope', '$stateParams', 'userService', function ($scope, $stateParams, userService) {
+angular.module('app.user').controller('UserEditController', ['$scope', '$stateParams', 'userService', function ($scope, $stateParams, userService) {
     var vm = this;
     vm.isSubmitting = false;
     vm.userId = Number($stateParams.userId);

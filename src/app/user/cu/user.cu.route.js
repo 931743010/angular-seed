@@ -1,5 +1,5 @@
 /* user 新建（create）和编辑（update/edit） */
-angular.module('app.user.cu').config(['$stateProvider', function ($stateProvider) {
+angular.module('app.user').config(['$stateProvider', function ($stateProvider) {
     $stateProvider
         .state('app.user.add', {
             url: '/add',

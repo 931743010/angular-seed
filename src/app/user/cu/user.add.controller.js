@@ -1,4 +1,4 @@
-angular.module('app.user.cu').controller('UserAddController', ['$scope', 'userService', function($scope, userService){
+angular.module('app.user').controller('UserAddController', ['$scope', 'userService', function($scope, userService){
     var vm = this;
     vm.isSubmitting = false;
 

@@ -5,8 +5,20 @@
                 <a class="navbar-brand" ui-sref="app.home"><img ng-src="assets/theme/{{AppConfig.theme}}/img/logo.png" /></a>
             </div>
             <div class="collapse navbar-collapse">
-                <div class="nav navbar-nav" menu="::nav"></div>
-
+                <ul class="nav navbar-nav">
+                    <li><a ui-sref="app.home" ui-sref-active="active">首页</a></li>
+                    <li dropdown>
+                        <a dropdown-toggle ui-sref="app.user" ui-sref-active="active">用户</a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a ui-sref="app.user.add" ui-sref-active="active">新建用户</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a ui-sref="app.role">角色</a>
+                    </li>
+                </ul>
             </div>
 
         </div>
@@ -14,9 +26,9 @@
     <div id="locationbar" class="container-fluid clearfix">
         <h1 class="pull-left" ng-bind="title"></h1>
         <ul class="breadcrumb pull-right">
-            <li ng-repeat="z in breadcrumb">
-                <a ui-sref="{{z.href}}" ng-bind="z.title" ng-if="$index!=breadcrumb.length-1"></a>
-                <span ng-bind="z.title"  ng-if="$index==breadcrumb.length-1"></span>
+            <li ng-repeat="z in vm.breadcrumb">
+                <a ui-sref="{{z.href}}" ng-bind="z.title" ng-if="$index!=vm.breadcrumb.length-1"></a>
+                <span ng-bind="z.title"  ng-if="$index==vm.breadcrumb.length-1"></span>
             </li>
         </ul>
     </div>

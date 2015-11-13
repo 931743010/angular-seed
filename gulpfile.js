@@ -29,10 +29,11 @@ var jshint = require('gulp-jshint');
 //var bootlint = require('gulp-bootlint');
 
 var path = {
-    js: ['src/app/**/*.js'],
+    js: ['src/app/**/*.js','!src/app/**/*.route.js','!src/app/route.js'],
+    jsRoute: ['src/app/**/*.route.js'],
     less: ['src/assets/**/*.less'],
     css: ['src/assets/**/*.css'],
-    coypFiles: ['src/assets/css'],
+    copyFiles: ['src/assets/css'],
     html: ['src/**/*.html']
 };
 
@@ -52,7 +53,7 @@ gulp.task('html', function(){
 });
 
 gulp.task('css', function () {
-    
+
 });
 
 gulp.task('assets', function () {
@@ -72,8 +73,12 @@ gulp.task('jshint', function () {
         .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('route', function () {
-    //合并所有route
+gulp.task('js-route', function() {
+
+    gulp.src(path.jsRoute)
+        .pipe(concat('route.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('src/app/'));
 });
 
 gulp.task('less', function () {
@@ -82,9 +87,8 @@ gulp.task('less', function () {
         .pipe(less())
         .pipe(minifyCss())
         .pipe(rename(function(path){
-            console.log(path);
-            path.dirname = path.dirname.replace('\\less','\\css');
-            path.extname = '.min.css'
+            path.dirname = path.dirname.replace('less','css');
+            path.extname = '.min.css';
         }))
         .pipe(gulp.dest('src/assets/theme/'));
 
@@ -105,6 +109,7 @@ gulp.task('bootlint', function () {
 
 gulp.task('watch', function () {
     gulp.watch(path.less, ['less']);
+    gulp.watch(path.jsRoute, ['js-route']);
 });
 
 gulp.task('connect-dev', function() {
@@ -123,4 +128,4 @@ gulp.task('connect-dist', function() {
 
 gulp.task('default', ['watch', 'connect-dev']);
 
-gulp.task('publish', ['jshint', 'less', 'html', 'css', 'js', 'assets', 'api.test', 'connect-dist']);
+gulp.task('build', ['jshint', 'less', 'html', 'css', 'js', 'assets', 'api.test', 'connect-dist']);
