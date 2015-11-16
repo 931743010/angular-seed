@@ -5,11 +5,11 @@ angular.module('app.home').config(['$stateProvider', function ($stateProvider) {
         url: '/',
         templateUrl: 'app/home/index.html',
         resolve:{
-            loadController:['$ocLazyLoad',function($ocLazyLoad){
-                $ocLazyLoad.load('app/home/home.controller.js');
+            load:['$ocLazyLoad',function($ocLazyLoad){
+                return $ocLazyLoad.load('app/home/home.controller.js');
             }]
         },
-        controller: 'HomeController'
+        controller: 'HomeController as vm'
     });
 
 }]);
