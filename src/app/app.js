@@ -30,46 +30,39 @@ angular.module('app', [
     'app.user',
     'app.role'])
     .config(['$httpProvider', function ($httpProvider) {
-        
+
         //$httpProvider.defaults.withCredentials = true;
-        
+
         $httpProvider.interceptors.push(['$q', '$location', '$rootScope', function ($q, $location, $rootScope) {
-            
-            var pending = 0;
-            
-            $rootScope.$watch(
-                function () {
-                    return pending > 0;
-                },
-                function (loading) {
-                    $rootScope.loading = loading;
-                }
-            );
+
+
             return {
                 request: function (config) {
-                    pending++;
+                    $rootScope.pendingCount++;
                     return config;
                 },
                 requestError: function (config) {
-                    pending++;
+
                 },
                 response: function (response) {
-                    pending--;
+                    $rootScope.pendingCount--;
                     return response;
                 },
                 responseError: function (response) {
-                    pending--;
-                    var status = response.status;
-                    if (status == 401) {
-                        $location.path('/login');
-                    }
+
+                    // var status = response.status;
+                    // if (status == 401) {
+                    //     $location.path('/login');
+                    // }
                     return $q.reject(response);
                 }
             };
         }]);
     }])
     .config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
-
+        // $ocLazyLoadProvider.config({
+        //  debug: true
+        // });
     }])
     .config(['stConfig', function (stConfig) {
         stConfig.pagination.itemsByPage = 10;
@@ -77,16 +70,24 @@ angular.module('app', [
     }])
     .constant('AppConfig', {
         theme: 'default',
-        serverBaseUrl: 'http://localhost:63342/'
-
+        serverBaseUrl: 'http://localhost:63342/',
+        staticBaseUrl: ''
     })
-
     .run(['$rootScope', '$state', '$stateParams', 'AppConfig', function ($rootScope, $state, $stateParams, AppConfig) {
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
 
+        $rootScope.pendingCount = 0;
         $rootScope.AppConfig = AppConfig;
-                
+    }])
+    .run(['$window', '$rootScope', '$state', function($window, $rootScope, $state) {
 
+        $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+            //进入state count清零
+            $rootScope.pendingCount = 0;
+
+            //权限验证
+
+        });
     }]);

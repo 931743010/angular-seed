@@ -3,7 +3,7 @@ var gulp = require('gulp');
 var connect = require('gulp-connect');
 
 var stream = require('event-stream');
- 
+
 var concat = require('gulp-concat');
 
 var less = require('gulp-less');
@@ -20,24 +20,20 @@ var templateCache = require('gulp-angular-templatecache');
 //https://www.npmjs.com/package/gulp-rename
 var rename = require('gulp-rename');
 
-//npm install --save-dev gulp-jshint 
+//npm install --save-dev gulp-jshint
 var jshint = require('gulp-jshint');
 //npm install --save-dev jshint-stylish
 
-//https://github.com/tschortsch/gulp-bootlint
-//https://github.com/twbs/bootlint/wiki
-//var bootlint = require('gulp-bootlint');
 
 var path = {
     js: ['src/app/**/*.js','!src/app/**/*.route.js','!src/app/route.js'],
-    jsRoute: ['src/app/**/*.route.js'],
     less: ['src/assets/**/*.less'],
     css: ['src/assets/**/*.css'],
-    copyFiles: ['src/assets/css'],
-    html: ['src/**/*.html']
+    html: ['src/**/*.html'],
+    route: ['src/app/**/*.route.js']
 };
 
-gulp.task('js', function () { 
+gulp.task('js', function () {
 
     gulp.src(path.js,{base:'src'})
         .pipe(uglify())
@@ -73,9 +69,9 @@ gulp.task('jshint', function () {
         .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('js-route', function() {
+gulp.task('route', function() {
 
-    gulp.src(path.jsRoute)
+    gulp.src(path.route)
         .pipe(concat('route.js'))
         .pipe(uglify())
         .pipe(gulp.dest('src/app/'));
@@ -96,20 +92,9 @@ gulp.task('less', function () {
 
 
 
-/*
-gulp.task('bootlint', function () {
-    gulp.src(path.html)
-        .pipe(bootlint({
-            disabledIds: ['E001', 'W001', 'W002', 'W003', 'W005']
-        }));
-});
-*/
-
-
-
 gulp.task('watch', function () {
     gulp.watch(path.less, ['less']);
-    gulp.watch(path.jsRoute, ['js-route']);
+    gulp.watch(path.route, ['route']);
 });
 
 gulp.task('connect-dev', function() {
@@ -128,4 +113,4 @@ gulp.task('connect-dist', function() {
 
 gulp.task('default', ['watch', 'connect-dev']);
 
-gulp.task('build', ['jshint', 'less', 'html', 'css', 'js', 'assets', 'api.test', 'connect-dist']);
+gulp.task('build', ['less', 'html', 'css', 'js', 'assets', 'api.test', 'connect-dist']);

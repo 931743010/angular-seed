@@ -13,7 +13,7 @@
 <body>
     
     <div id="page" ui-view></div>
-    <div class="loading" ng-show="loading" ng-cloak>加载中...</div>
+    <div class="loading" ng-show="pendingCount>0" ng-cloak>加载中...</div>
 
     <script src="assets/libs/jquery/jquery-2.1.4.min.js"></script>
     <script src="assets/libs/angular/angular.min.js"></script>
