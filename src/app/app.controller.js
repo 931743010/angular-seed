@@ -1,4 +1,5 @@
 (function() {
+	'use strict';
 	angular.module('app').controller('AppController', Controller);
 
 	Controller.$inject = ['$rootScope', '$scope', '$state', 'bread'];
