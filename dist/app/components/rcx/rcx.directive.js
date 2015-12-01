@@ -1,1 +1,0 @@
-angular.module("app.directives").directive("rcx",function(){return{link:function(e,i,l,n){$(i).after("<label></label>")}}});

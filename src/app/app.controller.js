@@ -1,8 +1,7 @@
 (function() {
-	'use strict';
 	angular.module('app').controller('AppController', Controller);
 
-	Controller.$injector = ['$rootScope', '$scope', '$state', 'bread'];
+	Controller.$inject = ['$rootScope', '$scope', '$state', 'bread'];
 
 	function Controller($rootScope, $scope, $state, bread) {
 
@@ -36,7 +35,7 @@
 					vm.breadcrumb.push(crumb[stateItem]);
 				}
 			}
-			if (current.indexOf('app.home') !== 0) {
+			if (current.indexOf('app.home') !== 0 && crumb['app.home']) {
 				vm.breadcrumb.unshift(crumb['app.home']);
 			}
 		});

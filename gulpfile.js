@@ -57,9 +57,18 @@ gulp.task('assets', function () {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('api.test', function () {
+gulp.task('copy', function () {
+    //api.test
     gulp.src(['src/api.test/**/*.*'], { base: 'src' })
         .pipe(gulp.dest('dist'));
+
+    //route
+    gulp.src('src/app/route.js', { base: 'src' })
+        .pipe(gulp.dest('dist/'));
+
+    //breadcrumb
+    gulp.src('src/app/bread/bread.json', { base: 'src' })
+        .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('jshint', function () {
@@ -113,4 +122,4 @@ gulp.task('connect-dist', function() {
 
 gulp.task('default', ['watch', 'connect-dev']);
 
-gulp.task('build', ['less', 'html', 'css', 'js', 'assets', 'api.test', 'connect-dist']);
+gulp.task('build', ['less', 'html', 'css', 'js', 'assets', 'copy', 'connect-dist']);

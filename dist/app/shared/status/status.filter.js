@@ -1,1 +1,1 @@
-angular.module("app.filters").filter("status",["Status",function(a){return function(t){var u="-";return angular.forEach(a,function(a){a.value===t&&(u=a.displayName)}),u}}]);
+angular.module("app.filters").config(["$filterProvider",function(r){r.register("status",["Status",function(r){return function(n){var t="-";return angular.forEach(r,function(r){r.value===n&&(t=r.displayName)}),t}}])}]);
