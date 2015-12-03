@@ -1,9 +1,9 @@
 (function() {
     'use strict';
     angular.module('app.role').controller('RoleModalController', Controller);
-    Controller.$inject = ['$scope', '$modalInstance', '$ocLazyLoad', '$injector', 'action', 'role'];
+    Controller.$inject = ['$modalInstance', '$ocLazyLoad', '$injector', 'action', 'role'];
 
-    function Controller($scope, $modalInstance, $ocLazyLoad, $injector, action, role) {
+    function Controller($modalInstance, $ocLazyLoad, $injector, action, role) {
         var that = this;
         that.$modalInstance = $modalInstance;
         that.$ocLazyLoad = $ocLazyLoad;
