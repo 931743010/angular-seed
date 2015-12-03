@@ -1,36 +1,48 @@
+(function() {
+    'use strict';
+    angular.module('app.role').controller('RoleModalController', Controller);
+    Controller.$inject = ['$scope', '$modalInstance', '$ocLazyLoad', '$injector', 'action', 'role'];
 
-angular.module('app.role').controller('RoleModalController', ['$scope', '$modalInstance', '$ocLazyLoad', '$injector', 'action', 'role', function ($scope, $modalInstance, $ocLazyLoad, $injector, action, role) {
-    $scope.action = action;
-    $scope.roleName = role.roleName;
-    $scope.isSubmitting = false;
+    function Controller($scope, $modalInstance, $ocLazyLoad, $injector, action, role) {
+        var that = this;
+        that.$modalInstance = $modalInstance;
+        that.$ocLazyLoad = $ocLazyLoad;
+        that.$injector = $injector;
+        that.action = action;
+        that.role = role;
 
-    $scope.add = function () {
-        $scope.isSubmitting = true;
-        $ocLazyLoad.load('app/role/role.service.js').then(function () {
-            var roleService = $injector.get('roleService');
-            roleService.add($scope.roleName).success(function (response) {
-                $scope.isSubmitting = false;
-                
-                $modalInstance.close();
-                
-            });
-        });
-    };
+        that.isSubmitting = false;
 
-    $scope.edit = function () {
-        $scope.isSubmitting = true;
-        $ocLazyLoad.load('app/role/role.service.js').then(function () {
-            var roleService = $injector.get('roleService');
-            roleService.edit(role.roleId, $scope.roleName).success(function (response) {
-                $scope.isSubmitting = false;
+    }
+    Controller.prototype.add = function() {
+        var that = this;
+        that.isSubmitting = true;
+        that.$ocLazyLoad.load('app/role/role.service.js').then(function() {
+            var roleService = that.$injector.get('roleService');
+            roleService.add(that.role.roleName).success(function(response) {
+                that.isSubmitting = false;
 
-                $modalInstance.close();
+                that.$modalInstance.close();
 
             });
         });
     };
 
-    $scope.cancel = function () {
-        $modalInstance.dismiss();
+    Controller.prototype.edit = function() {
+        var that = this;
+        that.isSubmitting = true;
+        that.$ocLazyLoad.load('app/role/role.service.js').then(function() {
+            var roleService = that.$injector.get('roleService');
+            roleService.edit(that.role.roleId, that.role.roleName).success(function(response) {
+                that.isSubmitting = false;
+
+                that.$modalInstance.close();
+
+            });
+        });
     };
-}]);
+
+    Controller.prototype.cancel = function() {
+        this.$modalInstance.dismiss();
+    };
+})();

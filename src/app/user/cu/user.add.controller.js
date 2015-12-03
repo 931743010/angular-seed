@@ -13,7 +13,7 @@
         that.password = null;
         that.passwordConfirm = null;
     }
-    
+
     Controller.prototype.add = function() {
         var that = this;
         that.isSubmitting = true;

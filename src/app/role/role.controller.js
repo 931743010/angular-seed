@@ -1,23 +1,42 @@
-angular.module('app.role').controller('RoleController', ['$scope', '$modal', 'roleService', function ($scope, $modal, roleService) {
-    $scope.roleDataTable = [];
-    $scope.getRoleList = getRoleList;
-    $scope.totalCount = 0;
+(function() {
+    'use strict';
+    angular.module('app.role').controller('RoleController', Controller);
+    Controller.$inject = ['$modal', 'roleService'];
 
-    $scope.isEmpty = false;
+    function Controller($modal, roleService) {
+        var that = this;
 
-    $scope.openRoleModal = function (action, role) {
-        console.log(action, role);
-        var modalInstance = $modal.open({
+        that.$modal = $modal;
+        that.roleService = roleService;
+
+        that.roleDataTable = [];
+        that.getRoleList = getRoleList;
+        that.totalCount = 0;
+
+        that.isEmpty = false;
+
+        function getRoleList(tableState) {
+            that.roleService.getRoleList().success(function(response) {
+                that.isEmpty = response.data.itemList.length === 0;
+                tableState.pagination.numberOfPages = response.data.pageCount;
+                that.roleDataTable = response.data.itemList;
+                that.totalCount = response.data.totalCount;
+            });
+        }
+    }
+    Controller.prototype.openRoleModal = function(action, role) {
+
+        var modalInstance = this.$modal.open({
             templateUrl: 'app/role/role-modal/index.html',
-            controller: 'RoleModalController',
+            controller: 'RoleModalController as vm',
             resolve: {
-                action: function () {
+                action: function() {
                     return action;
                 },
-                role: function () {
+                role: function() {
                     return role;
                 },
-                load: ['$ocLazyLoad', function ($ocLazyLoad) {
+                load: ['$ocLazyLoad', function($ocLazyLoad) {
                     return $ocLazyLoad.load([
                         'app/role/role-modal/role-modal.controller.js'
                     ]);
@@ -25,27 +44,10 @@ angular.module('app.role').controller('RoleController', ['$scope', '$modal', 'ro
             }
         });
 
-        modalInstance.result.then(function (data) {
-            
+        modalInstance.result.then(function(data) {
+
         });
     };
 
-    
 
-    function getRoleList(tableState) {
-        var searchObject = $scope.searchObject;
-
-        roleService.getRoleList().success(function (response) {
-            
-
-            $scope.isEmpty = response.data.itemList.length === 0;
-            tableState.pagination.numberOfPages = response.data.pageCount;
-            $scope.roleDataTable = response.data.itemList;
-            $scope.totalCount = response.data.totalCount;
-
-
-        });
-    }
-}]);
-
-
+})();

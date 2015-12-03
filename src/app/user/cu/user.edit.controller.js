@@ -20,7 +20,7 @@
 
         function getUserInfo() {
 
-            userService.getUserInfo(that.userId).success(function(response) {
+            that.userService.getUserInfo(that.userId).success(function(response) {
 
                 var data = response.data;
 
@@ -37,7 +37,7 @@
         var that = this;
         that.isSubmitting = true;
 
-        userService.edit(that.userId, that.fullName, that.password).success(function(response) {
+        that.userService.edit(that.userId, that.fullName, that.password).success(function(response) {
             that.isSubmitting = false;
 
             that.$scope.$state.go('^');
