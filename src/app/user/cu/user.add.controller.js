@@ -1,23 +1,28 @@
-angular.module('app.user').controller('UserAddController', ['$scope', 'userService', function($scope, userService){
-    var vm = this;
-    vm.isSubmitting = false;
+(function() {
+    'use strict';
+    angular.module('app.user').controller('UserAddController', Controller);
+    Controller.$inject = ['$scope', 'userService'];
 
+    function Controller($scope, userService) {
+        var that = this;
+        that.$scope = $scope;
+        that.userService = userService;
+        that.isSubmitting = false;
+        that.userName = null;
+        that.realName = null;
+        that.password = null;
+        that.passwordConfirm = null;
+    }
+    
+    Controller.prototype.add = function() {
+        var that = this;
+        that.isSubmitting = true;
 
-    vm.userName = null;
-    vm.realName = null;
-    vm.password = null;
-    vm.passwordConfirm = null;
+        that.userService.add(that.userName, that.fullName, that.password).success(function(response) {
+            that.isSubmitting = false;
 
+            that.$scope.$state.go('^');
 
-    vm.add = function(){
-        vm.isSubmitting = true;
-
-        userService.add(vm.userName, vm.fullName, vm.password).success(function(response){
-            vm.isSubmitting = false;
-            
-            $scope.$state.go('^');
-            
         });
     };
-}]);
-
+})();

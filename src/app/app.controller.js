@@ -6,8 +6,8 @@
 
 	function Controller($rootScope, $scope, $state, bread) {
 
-		var vm = this;
-		vm.breadcrumb = [];
+		var that = this;
+		that.breadcrumb = [];
 
 		var crumb = {};
 		(function flatten(a, dest) {
@@ -21,10 +21,9 @@
 			}
 		})(bread, crumb);
 
-
 		$scope.$on('$stateChangeSuccess', function() {
 
-			vm.breadcrumb = [];
+			that.breadcrumb = [];
 			var current = $state.$current.name,
 				states = current.split('.'),
 				i = 2,
@@ -33,11 +32,11 @@
 				var stateItem = states.slice(0, i).join('.');
 				if (crumb[stateItem]) {
 					$rootScope.title = crumb[stateItem].title;
-					vm.breadcrumb.push(crumb[stateItem]);
+					that.breadcrumb.push(crumb[stateItem]);
 				}
 			}
 			if (current.indexOf('app.home') !== 0 && crumb['app.home']) {
-				vm.breadcrumb.unshift(crumb['app.home']);
+				that.breadcrumb.unshift(crumb['app.home']);
 			}
 		});
 	}

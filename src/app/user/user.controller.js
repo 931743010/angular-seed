@@ -1,43 +1,46 @@
-angular.module('app.user').controller('UserController', ['$scope', 'userService', function ($scope, userService) {
-    var vm = this;
-    vm.userDataTable = [];
-    vm.getUserList = getUserList;
-    vm.totalCount = 0;
+(function() {
+    'use strict';
+    angular.module('app.user').controller('UserController', Controller);
 
-    vm.isEmpty = false;
-    
-    vm.toggleAll = function () {
-        var checked = vm.isAllSelected;
-        angular.forEach(vm.userDataTable, function (item) {
+    Controller.$inject = ['$scope', 'userService'];
+
+    function Controller($scope, userService) {
+        var that = this;
+        that.isAllSelected = false;
+        that.userDataTable = [];
+        that.getUserList = getUserList;
+        that.totalCount = 0;
+
+        that.isEmpty = false;
+
+
+        function getUserList(tableState) {
+
+            userService.getUserList().success(function(response) {
+                that.isEmpty = response.data.itemList.length === 0;
+                tableState.pagination.numberOfPages = response.data.pageCount;
+                that.userDataTable = response.data.itemList;
+                that.totalCount = response.data.totalCount;
+            });
+        }
+    }
+
+    Controller.prototype.toggleAll = function(){
+        var checked = this.isAllSelected;
+        angular.forEach(this.userDataTable, function(item) {
             item.selected = checked;
         });
     };
 
-    vm.toggle = function () {
+    Controller.prototype.toggle = function() {
+
         var isAllSelected = true;
-        angular.forEach(vm.userDataTable, function (item) {
+        angular.forEach(this.userDataTable, function(item) {
             if (!item.selected) {
                 isAllSelected = false;
             }
         });
-        vm.isAllSelected = isAllSelected;
+        this.isAllSelected = isAllSelected;
+
     };
-
-
-    function getUserList(tableState){
-        
-
-        userService.getUserList().success(function (response) {
-
-
-            vm.isEmpty = response.data.itemList.length === 0;
-            tableState.pagination.numberOfPages = response.data.pageCount;
-            vm.userDataTable = response.data.itemList;
-            vm.totalCount = response.data.totalCount;
-
-
-        });
-    }
-}]);
-
-
+})();

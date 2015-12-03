@@ -1,42 +1,47 @@
+(function() {
+    'use strict';
+    angular.module('app.user').controller('UserEditController', Controller);
+    Controller.$inject = ['$scope', '$stateParams', 'userService'];
 
-angular.module('app.user').controller('UserEditController', ['$scope', '$stateParams', 'userService', function ($scope, $stateParams, userService) {
-    var vm = this;
-    vm.isSubmitting = false;
-    vm.userId = Number($stateParams.userId);
+    function Controller($scope, $stateParams, userService) {
+        var that = this;
+        that.$scope = $scope;
+        that.userService = userService;
+        that.isSubmitting = false;
+        that.userId = Number($stateParams.userId);
 
-    vm.username = null;
-    vm.fullName = null;
-    vm.password = null;
-    vm.passwordConfirm = null;
-
-
-
-
-    getUserInfo();
-
-    vm.edit = function () {
-        vm.isSubmitting = true;
-
-        userService.edit(vm.userId, vm.fullName, vm.password).success(function (response) {
-            vm.isSubmitting = false;
-            
-            $scope.$state.go('^');
-            
-        });
-    };
+        that.username = null;
+        that.fullName = null;
+        that.password = null;
+        that.passwordConfirm = null;
 
 
-    function getUserInfo() {
+        getUserInfo();
 
-        userService.getUserInfo(vm.userId).success(function (response) {
+        function getUserInfo() {
+
+            userService.getUserInfo(that.userId).success(function(response) {
 
                 var data = response.data;
 
-                vm.userName = data.userName;
-                vm.fullName = data.fullName;
+                that.userName = data.userName;
+                that.fullName = data.fullName;
 
 
+
+            });
+        }
+    }
+
+    Controller.prototype.edit = function() {
+        var that = this;
+        that.isSubmitting = true;
+
+        userService.edit(that.userId, that.fullName, that.password).success(function(response) {
+            that.isSubmitting = false;
+
+            that.$scope.$state.go('^');
 
         });
-    }
-}]);
+    };
+})();
