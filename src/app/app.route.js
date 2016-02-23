@@ -22,7 +22,7 @@ angular.module('app').config(['$provide', '$stateProvider', '$urlRouterProvider'
                 });
             }],
             load: ['$ocLazyLoad', function($ocLazyLoad){
-                $ocLazyLoad.load(['app/app.controller.js']);
+                return $ocLazyLoad.load(['app/app.controller.js']);
             }]
         },
         controller: 'AppController as app'
